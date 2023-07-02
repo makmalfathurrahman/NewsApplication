@@ -1,14 +1,21 @@
 package com.example.newsapplication.adapter
 
+import android.annotation.SuppressLint
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.fragment.app.FragmentContainerView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.example.newsapplication.R
 import com.example.newsapplication.model.Article
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class NewsAdapter: RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
 
@@ -40,10 +47,17 @@ class NewsAdapter: RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
         return differ.currentList.size
     }
 
+
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val article = differ.currentList[position]
         holder.itemView.apply {
-            Glide.with(this).load(article.urlToImage).into()
+            val imageView = findViewById<ImageView>(R.id.imageView)
+            val tvSource = findViewById<TextView>(R.id.tvSource)
+            val tvTitle = findViewById<TextView>(R.id.tvTitle)
+            val tvDescription = findViewById<TextView>(R.id.tvDescription)
+            val tvPublishedAt = findViewById<TextView>(R.id.tvPublishedAt)
+
+            Glide.with(this).load(article.urlToImage).into(imageView)
             tvSource.text = article.source.name
             tvTitle.text = article.title
             tvDescription.text = article.description
