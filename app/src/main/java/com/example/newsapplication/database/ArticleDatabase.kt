@@ -15,23 +15,22 @@ import com.example.newsapplication.model.Article
 @TypeConverters(Converters::class)
 abstract class ArticleDatabase: RoomDatabase() {
 
-    abstract fun dao(): ArticleDao
+    abstract fun articleDao(): ArticleDao
 
     companion object {
         private var instance: ArticleDatabase? = null
+        private val LOCK = Any()
 
-        fun getInstance(context: Context): ArticleDatabase {
-            if (instance == null) {
-                synchronized(ArticleDatabase::class.java) {
-                    instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        ArticleDatabase::class.java,
-                        "new_article"
-                    ).build()
-                }
-            }
-            return instance as ArticleDatabase
+        operator fun invoke(context: Context) = instance ?: synchronized(LOCK) {
+            instance ?: createDatabase(context).also { instance = it }
         }
+
+        private fun createDatabase(context: Context) =
+            Room.databaseBuilder(
+                context.applicationContext,
+                ArticleDatabase::class.java,
+                "new_news"
+            ).build()
     }
 
 }
